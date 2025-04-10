@@ -7,7 +7,6 @@ using TMPro;
     public float jumpForce = 3f;
     private bool is_grounded = false;
     private Rigidbody rb; 
-
     private int count;
     private int jumpCount;
 
@@ -28,6 +27,18 @@ using TMPro;
         SetCountText();
         winTextObject.SetActive(false);
     }
+     // This function is called when a move input is detected.
+    void OnMove(InputValue movementValue)
+    {
+        Vector2 movementVector = movementValue.Get<Vector2>();
+        movementX = movementVector.x; 
+        movementY = movementVector.y; 
+    }
+        private void FixedUpdate() 
+    {
+        Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
+        rb.AddForce(movement * speed); 
+    }
     void Update()
     {
         // if space is presses, if ball hasnt jumped twice
@@ -44,18 +55,6 @@ using TMPro;
     
     }
 
- // This function is called when a move input is detected.
-    void OnMove(InputValue movementValue)
-    {
-        Vector2 movementVector = movementValue.Get<Vector2>();
-        movementX = movementVector.x; 
-        movementY = movementVector.y; 
-    }
-    private void FixedUpdate() 
-    {
-        Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
-        rb.AddForce(movement * speed); 
-    }
     private void OnCollisionEnter(Collision collision)
     {
        if (collision.gameObject.CompareTag("Ground"))
@@ -75,7 +74,7 @@ using TMPro;
 }
  void OnTriggerEnter(Collider other) 
     {
- if (other.gameObject.CompareTag("PickUp")) 
+    if (other.gameObject.CompareTag("PickUp")) 
         {
             other.gameObject.SetActive(false);
             count = count + 1;
